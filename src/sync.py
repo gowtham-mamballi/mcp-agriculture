@@ -24,11 +24,14 @@ def load_config():
     pass
 
 
+import sqlite3
 def connect_db(db_path: str):
     """
     Create and return a SQLite connection.
     """
-    pass
+    conn = sqlite3.connect(db_path)
+    return conn
+
 
 
 def fetch_sheet_data():
