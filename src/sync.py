@@ -13,6 +13,7 @@ No rules are applied here.
 """
 
 from typing import Optional
+from pathlib import Path
 
 
 def load_config():
@@ -73,34 +74,34 @@ def sync_harvest_sales(rows):
 def run():
     """
     Minimal runnable entry point.
-    Creates a database and inserts one season.
+    Creates a database using the canonical schema file.
     """
     db_path = "mcp_agriculture.db"
     conn = connect_db(db_path)
     cursor = conn.cursor()
 
-    # Create seasons table if not exists
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS seasons (
-            season_id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            start_date TEXT NOT NULL,
-            end_date TEXT,
-            status TEXT NOT NULL,
-            notes TEXT
-        );
-    """)
+    # Load and execute schema
+    schema_path = Path(__file__).resolve().parent.parent / "schema" / "mcp_agriculture.sql"
+    with open(schema_path, "r", encoding="utf-8") as f:
+        schema_sql = f.read()
 
-    # Insert one sample season
-    cursor.execute("""
-        INSERT INTO seasons (name, start_date, status, notes)
-        VALUES (?, ?, ?, ?);
-    """, ("Demo Season", "2025-01-01", "active", "Initial test run"))
+    cursor.executescript(schema_sql)
+
+    # Insert one sample season if none exist
+    cursor.execute("SELECT COUNT(*) FROM seasons;")
+    count = cursor.fetchone()[0]
+
+    if count == 0:
+        cursor.execute("""
+            INSERT INTO seasons (name, start_date, status, notes)
+            VALUES (?, ?, ?, ?);
+        """, ("Demo Season", "2025-01-01", "active", "Initial test run"))
 
     conn.commit()
     conn.close()
 
-    print("MCP Agriculture v1: database created and season inserted.")
+    print("MCP Agriculture v1: database initialized using schema.")
+
 
 
 
