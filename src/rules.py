@@ -16,6 +16,8 @@ This module contains NO pricing or prediction logic.
 
 from enum import Enum
 from typing import List
+import sqlite3
+from pathlib import Path
 
 
 class CropStatus(Enum):
@@ -30,15 +32,6 @@ def load_timelines():
     Implementation deferred.
     """
     pass
-
-
-def evaluate_crop(crop, activities, timeline) -> CropStatus:
-    """
-    Evaluate a single crop against its timeline.
-    Returns CropStatus.
-    """
-    pass
-
 
 def evaluate_crop(crop, activities, timeline=None) -> CropStatus:
     """
@@ -55,4 +48,41 @@ def evaluate_crop(crop, activities, timeline=None) -> CropStatus:
             return CropStatus.ON_TRACK
 
     return CropStatus.WATCH
+  
+def get_activities_for_crop(db_path: str, crop_id: int):
+    """
+    Read activities for a crop from SQLite.
+    Returns a list of dicts compatible with evaluate_crop().
+    """
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT activity_type, done
+        FROM activities
+        WHERE crop_id = ?
+    """, (crop_id,))
+
+    rows = cursor.fetchall()
+    conn.close()
+
+    activities = []
+    for activity_type, done in rows:
+        activities.append({
+            "activity_type": activity_type,
+            "done": done
+        })
+
+    return activities
+  
+if __name__ == "__main__":
+    db_path = Path(__file__).resolve().parent.parent / "mcp_agriculture.db"
+
+    # TEMP: assume crop_id = 1 for now
+    crop_id = 1
+
+    activities = get_activities_for_crop(str(db_path), crop_id)
+    status = evaluate_crop(crop=None, activities=activities)
+
+    print(f"Crop {crop_id} status:", status.value)
 
