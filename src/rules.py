@@ -40,8 +40,19 @@ def evaluate_crop(crop, activities, timeline) -> CropStatus:
     pass
 
 
-def evaluate_season(season_id: int) -> List[CropStatus]:
+def evaluate_crop(crop, activities, timeline=None) -> CropStatus:
     """
-    Evaluate all crops in a season.
+    Very first rule (v1):
+    - If no completed weeding activity exists -> WATCH
+    - Else -> ON_TRACK
     """
-    pass
+
+    for activity in activities:
+        if (
+            activity.get("activity_type") == "weeding"
+            and activity.get("done") == 1
+        ):
+            return CropStatus.ON_TRACK
+
+    return CropStatus.WATCH
+
