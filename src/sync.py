@@ -101,6 +101,29 @@ def run():
     conn.close()
 
     print("MCP Agriculture v1: database initialized using schema.")
+    
+def dry_run_read_sheet(sheet_id: str):
+    """
+    Read Activities_Log sheet and print row count.
+    """
+    import gspread
+    from oauth2client.service_account import ServiceAccountCredentials
+
+    scope = [
+        "https://spreadsheets.google.com/feeds",
+        "https://www.googleapis.com/auth/drive.readonly"
+    ]
+
+    creds = ServiceAccountCredentials.from_json_keyfile_name(
+        "credentials.json", scope
+    )
+    client = gspread.authorize(creds)
+
+    sheet = client.open_by_key(sheet_id)
+    worksheet = sheet.worksheet("Activities_Log")
+
+    rows = worksheet.get_all_records()
+    print(f"Activities_Log rows found: {len(rows)}")
 
 
 
