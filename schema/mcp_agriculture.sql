@@ -17,3 +17,16 @@ CREATE TABLE IF NOT EXISTS seasons (
     notes TEXT
 );
 
+-- -------------------------------------------------
+-- Table: crops
+-- -------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS crops (
+    crop_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    season_id INTEGER NOT NULL,
+    crop_name TEXT NOT NULL,
+    area_acres REAL NOT NULL,
+    sowing_date TEXT,
+    notes TEXT,
+    FOREIGN KEY (season_id) REFERENCES seasons(season_id)
+);
