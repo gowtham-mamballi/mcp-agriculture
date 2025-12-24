@@ -78,11 +78,14 @@ def get_activities_for_crop(db_path: str, crop_id: int):
 if __name__ == "__main__":
     db_path = Path(__file__).resolve().parent.parent / "mcp_agriculture.db"
 
-    # TEMP: assume crop_id = 1 for now
-    crop_id = 1
+    crop_ids = get_all_crop_ids(str(db_path))
 
-    activities = get_activities_for_crop(str(db_path), crop_id)
-    status = evaluate_crop(crop=None, activities=activities)
+    if not crop_ids:
+        print("No crops found.")
+    else:
+        for crop_id in crop_ids:
+            activities = get_activities_for_crop(str(db_path), crop_id)
+            status = evaluate_crop(crop=None, activities=activities)
+            print(f"Crop {crop_id} status: {status.value}")
 
-    print(f"Crop {crop_id} status:", status.value)
 
