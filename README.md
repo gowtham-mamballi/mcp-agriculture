@@ -1,2 +1,2 @@
 # mcp-agriculture
-A simple MCP system where we track the agriculture produce from planning to sales.
+A simple, open, field-first agriculture tracking system using Google Sheets + SQLite.
