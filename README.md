@@ -84,4 +84,4 @@ Future ideas go into v2.
 License will be added after v1 stabilizes.
 
 
-
+Local setup verified on Windows.
