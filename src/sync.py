@@ -72,9 +72,36 @@ def sync_harvest_sales(rows):
 
 def run():
     """
-    Main sync entry point.
+    Minimal runnable entry point.
+    Creates a database and inserts one season.
     """
-    pass
+    db_path = "mcp_agriculture.db"
+    conn = connect_db(db_path)
+    cursor = conn.cursor()
+
+    # Create seasons table if not exists
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS seasons (
+            season_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            start_date TEXT NOT NULL,
+            end_date TEXT,
+            status TEXT NOT NULL,
+            notes TEXT
+        );
+    """)
+
+    # Insert one sample season
+    cursor.execute("""
+        INSERT INTO seasons (name, start_date, status, notes)
+        VALUES (?, ?, ?, ?);
+    """, ("Demo Season", "2025-01-01", "active", "Initial test run"))
+
+    conn.commit()
+    conn.close()
+
+    print("MCP Agriculture v1: database created and season inserted.")
+
 
 
 if __name__ == "__main__":
