@@ -48,3 +48,20 @@ CREATE TABLE IF NOT EXISTS activities (
     FOREIGN KEY (crop_id) REFERENCES crops(crop_id)
 );
 
+-- -------------------------------------------------
+-- Table: harvest_sales
+-- -------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS harvest_sales (
+    sale_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    crop_id INTEGER NOT NULL,
+    event_date TEXT NOT NULL,
+    quantity_harvested REAL,
+    quantity_sold REAL,
+    price_per_unit_inr REAL,
+    market TEXT,
+    transport_misc_inr REAL,
+    notes TEXT,
+    FOREIGN KEY (crop_id) REFERENCES crops(crop_id)
+);
+
