@@ -3,19 +3,17 @@ MCP Agriculture v1
 Rules engine
 
 Purpose:
-- Apply frozen crop timelines
 - Detect missed or delayed activities
 - Assign simple status per crop:
   - ON_TRACK
   - WATCH
-  - ACTION_NEEDED
+  - ACTION_NEEDED (future)
 
 This module contains NO data ingestion logic.
 This module contains NO pricing or prediction logic.
 """
 
 from enum import Enum
-from typing import List
 import sqlite3
 from pathlib import Path
 
@@ -26,20 +24,12 @@ class CropStatus(Enum):
     ACTION_NEEDED = "action_needed"
 
 
-def load_timelines():
-    """
-    Load standard, frozen crop timelines.
-    Implementation deferred.
-    """
-    pass
-
 def evaluate_crop(crop, activities, timeline=None) -> CropStatus:
     """
-    Very first rule (v1):
-    - If no completed weeding activity exists -> WATCH
-    - Else -> ON_TRACK
+    v1 rule:
+    - If at least one completed weeding activity exists -> ON_TRACK
+    - Else -> WATCH
     """
-
     for activity in activities:
         if (
             activity.get("activity_type") == "weeding"
@@ -48,7 +38,8 @@ def evaluate_crop(crop, activities, timeline=None) -> CropStatus:
             return CropStatus.ON_TRACK
 
     return CropStatus.WATCH
-  
+
+
 def get_activities_for_crop(db_path: str, crop_id: int):
     """
     Read activities for a crop from SQLite.
@@ -66,15 +57,26 @@ def get_activities_for_crop(db_path: str, crop_id: int):
     rows = cursor.fetchall()
     conn.close()
 
-    activities = []
-    for activity_type, done in rows:
-        activities.append({
-            "activity_type": activity_type,
-            "done": done
-        })
+    return [
+        {"activity_type": activity_type, "done": done}
+        for activity_type, done in rows
+    ]
 
-    return activities
-  
+
+def get_all_crop_ids(db_path: str):
+    """
+    Fetch all crop_ids from SQLite.
+    """
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT crop_id FROM crops;")
+    rows = cursor.fetchall()
+    conn.close()
+
+    return [r[0] for r in rows]
+
+
 if __name__ == "__main__":
     db_path = Path(__file__).resolve().parent.parent / "mcp_agriculture.db"
 
@@ -87,5 +89,3 @@ if __name__ == "__main__":
             activities = get_activities_for_crop(str(db_path), crop_id)
             status = evaluate_crop(crop=None, activities=activities)
             print(f"Crop {crop_id} status: {status.value}")
-
-
