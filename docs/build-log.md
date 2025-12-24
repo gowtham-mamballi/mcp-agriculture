@@ -126,3 +126,55 @@ Write back to Google Sheets
 Insert sheet data into SQLite automatically
 Modify or validate sheet data
 These capabilities are added incrementally in later steps.
+
+---
+
+## Real activity sync & rule validation
+
+This milestone confirms MCP Agriculture’s first end-to-end
+**field → memory → judgement** loop using real data.
+
+### Activity sync
+
+- One activity row was added to `Activities_Log` in Google Sheets:
+  - Crop: Ragi
+  - Activity: weeding
+  - Done: checked
+
+Sync command executed:
+
+```bash
+py src/sync.py
+```
+Observed output:
+
+Activities_Log rows found: 1
+Activities sync complete: 1 inserted, 0 skipped
+MCP Agriculture v1: sync run complete.
+
+Re-running the same command produced:
+
+Activities sync complete: 0 inserted, 0 skipped
+
+This confirms idempotent behavior — duplicate activities are not inserted.
+
+Rule evaluation
+
+Rules engine executed:
+
+py src/rules.py
+
+
+Observed output:
+
+Crop 1 status: on_track
+
+
+This confirms:
+
+Rules are evaluated against real SQLite data
+
+MCP judgement changes automatically based on field activity
+
+The system is safe to run repeatedly without side effects
+
