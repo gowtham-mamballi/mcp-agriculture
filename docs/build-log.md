@@ -78,3 +78,51 @@ Proven end-to-end execution loop
 No paid services or dependencies
 This document is updated incrementally as the system evolves.
 
+--
+---
+
+## Google Sheet integration (read-only, v1)
+
+MCP Agriculture uses Google Sheets as a **field-friendly input layer**.
+
+At this stage, integration is intentionally **read-only**.
+
+### Sheet details
+
+- Sheet name: `MCP_Agriculture_v1`
+- Tabs used:
+  - `Activities_Log`
+  - `Harvest_Sales`
+  - `Observations`
+
+### Authentication model
+
+- Google Service Account
+- Read-only access
+- No user login required at runtime
+- No billing enabled
+- Credentials stored locally (`credentials.json`)
+- Credentials are never committed to GitHub
+
+### Verified behavior
+
+The following command was executed successfully:
+
+```bash
+py src/sync.py
+
+Activities_Log rows found: <N>
+MCP Agriculture v1: database initialized using schema.
+
+This confirms:
+
+Google authentication works
+Sheet access works
+MCP can read real field data
+
+Explicit non-goals (v1)
+At this stage, MCP does NOT:
+Write back to Google Sheets
+Insert sheet data into SQLite automatically
+Modify or validate sheet data
+These capabilities are added incrementally in later steps.
