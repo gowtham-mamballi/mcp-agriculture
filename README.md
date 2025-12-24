@@ -72,10 +72,16 @@ mcp-agriculture/
 
 ## Status
 
-This repository is actively building **v1**.
+**MCP Agriculture v1 is complete.**
 
-Each step is committed and not revisited.
-Future ideas go into v2.
+V1 establishes the core Management Control Plane:
+- Google Sheets as field input
+- SQLite as system of record
+- Idempotent data sync
+- Rule-based crop status evaluation
+- Multi-crop support
+
+Further work will build on this stable v1 foundation as v2.
 
 ---
 
