@@ -81,7 +81,6 @@ Future ideas go into v2.
 
 ## License
 
-License will be added after v1 stabilizes.
-
+MIT License.
 
 Local setup verified on Windows.
