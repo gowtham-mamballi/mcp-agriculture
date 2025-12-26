@@ -1,0 +1,14 @@
+# --- Local configuration (never commit) ---
+config.json
+credentials.json
+
+# --- Local database ---
+mcp_agriculture.db
+
+# --- Python virtual environment ---
+mcpenv/
+
+# --- Python cache ---
+__pycache__/
+*.pyc
+

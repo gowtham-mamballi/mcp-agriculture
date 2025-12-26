@@ -83,6 +83,8 @@ V1 establishes the core Management Control Plane:
 
 Further work will build on this stable v1 foundation as v2.
 
+Weather integration (facts-only) added as v2.1 foundation. See docs/WEATHER_V2_1.md.
+
 ---
 
 ## License

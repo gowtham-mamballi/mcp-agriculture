@@ -65,3 +65,12 @@ CREATE TABLE IF NOT EXISTS harvest_sales (
     FOREIGN KEY (crop_id) REFERENCES crops(crop_id)
 );
 
+-- Daily weather facts (raw, no interpretation)
+CREATE TABLE IF NOT EXISTS weather_daily (
+    date TEXT PRIMARY KEY,
+    temp_max_c REAL,
+    temp_min_c REAL,
+    rain_mm REAL,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
